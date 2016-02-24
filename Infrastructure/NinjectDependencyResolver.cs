@@ -3,27 +3,23 @@ using System.Collections.Generic;
 using System.Web.Http.Dependencies;
 using Ninject;
 using Ninject.Web.WebApi;
+using Ninject.Web.WebApi.Filter;
+using System.Web.Http.Validation;
+using Ninject.Syntax;
+using Ninject.Activation;
+using System.Linq;
+using Ninject.Parameters;
 
 namespace WindowsService1
 {
-    public class NinjectDependencyResolver : IDependencyResolver
+    public class NinjectDependencyResolver : NinjectScope, IDependencyResolver
     {
         private IKernel kernel;
-
-        public NinjectDependencyResolver(IKernel kernelParam)
+        public NinjectDependencyResolver(IKernel kernel)
+        : base(kernel)
         {
-            kernel = kernelParam;
+            this.kernel = kernel;
             AddBindings();
-        }
-
-        public object GetService(Type serviceType)
-        {
-            return kernel.TryGet(serviceType);
-        }
-
-        public IEnumerable<object> GetServices(Type serviceType)
-        {
-            return kernel.GetAll(serviceType);
         }
 
         private void AddBindings()
@@ -31,19 +27,38 @@ namespace WindowsService1
             kernel.Bind<IItem>().To<Item>();
         }
 
+        public IDependencyScope BeginScope()
+        {
+            return new NinjectScope(kernel.BeginBlock());
+        }
+    }
+
+    public class NinjectScope : IDependencyScope
+    {
+        protected IResolutionRoot resolutionRoot;
+
+        public NinjectScope(IResolutionRoot kernel)
+        {
+            resolutionRoot = kernel;
+        }
+
+        public object GetService(Type serviceType)
+        {
+            IRequest request = resolutionRoot.CreateRequest(serviceType, null, new Parameter[0], true, true);
+            return resolutionRoot.Resolve(request).SingleOrDefault();
+        }
+
+        public IEnumerable<object> GetServices(Type serviceType)
+        {
+            IRequest request = resolutionRoot.CreateRequest(serviceType, null, new Parameter[0], true, true);
+            return resolutionRoot.Resolve(request).ToList();
+        }
 
         public void Dispose()
         {
-            IDisposable disposable = kernel as IDisposable;
-            if (disposable != null)
-                disposable.Dispose();
-
-            kernel = null;
-        }
-
-        public IDependencyScope BeginScope()
-        {
-            return new NinjectDependencyScope(kernel.BeginBlock());
+            IDisposable disposable = (IDisposable)resolutionRoot;
+            if (disposable != null) disposable.Dispose();
+            resolutionRoot = null;
         }
     }
 }

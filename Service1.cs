@@ -13,6 +13,10 @@ using System.Web.Http;
 using System.Web.Http.SelfHost;
 using Ninject;
 using System.Reflection;
+using Ninject.Web.WebApi;
+using System.Web.Http.Validation;
+using Ninject.Web.WebApi.Filter;
+using Ninject.Extensions.Wcf;
 
 namespace WindowsService1
 {
@@ -32,9 +36,10 @@ namespace WindowsService1
                 routeTemplate: "",
                 defaults: new { controller = "Time"}
                 );
-
+            
             var kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
+            //kernel.Bind<DefaultModelValidatorProviders>().ToConstant(new DefaultModelValidatorProviders(config.Services.GetServices(typeof(ModelValidatorProvider)).Cast<ModelValidatorProvider>()));
             config.DependencyResolver = new NinjectDependencyResolver(kernel);
 
             HttpSelfHostServer server = new HttpSelfHostServer(config);
