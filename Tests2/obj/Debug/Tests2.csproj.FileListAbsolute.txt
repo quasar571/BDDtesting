@@ -28,3 +28,5 @@ c:\Docs\visual studio 2015\Projects\WebAPI\Tests2\bin\Debug\System.Net.Http.Form
 c:\Docs\visual studio 2015\Projects\WebAPI\Tests2\obj\Debug\Tests2.csprojResolveAssemblyReference.cache
 c:\Docs\visual studio 2015\Projects\WebAPI\Tests2\obj\Debug\Tests2.dll
 c:\Docs\visual studio 2015\Projects\WebAPI\Tests2\obj\Debug\Tests2.pdb
+c:\Docs\visual studio 2015\Projects\WebAPI\Tests2\bin\Debug\TestStack.BDDfy.dll
+c:\Docs\visual studio 2015\Projects\WebAPI\Tests2\bin\Debug\TestStack.BDDfy.xml

@@ -119,6 +119,7 @@
   <ItemGroup>
     <Compile Include="Abstract\IItem.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
+    <Compile Include="Models\Configuration.cs" />
     <Compile Include="Models\Item.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>

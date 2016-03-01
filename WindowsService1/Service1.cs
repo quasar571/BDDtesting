@@ -29,20 +29,9 @@ namespace WindowsService1
 
         protected override void OnStart(string[] args)
         {
-            var config = new HttpSelfHostConfiguration("http://localhost:7777");
-            config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
-            config.Routes.MapHttpRoute(
-                name: "Api",
-                routeTemplate: "",
-                defaults: new { controller = "Time"}
-                );
-            
-            var kernel = new StandardKernel();
-            kernel.Load(Assembly.GetExecutingAssembly());
-            //kernel.Bind<DefaultModelValidatorProviders>().ToConstant(new DefaultModelValidatorProviders(config.Services.GetServices(typeof(ModelValidatorProvider)).Cast<ModelValidatorProvider>()));
-            config.DependencyResolver = new NinjectDependencyResolver(kernel);
+            Configuration conf = new Configuration("http://localhost:7777");
 
-            HttpSelfHostServer server = new HttpSelfHostServer(config);
+            HttpSelfHostServer server = new HttpSelfHostServer(conf.Config);
             server.OpenAsync().Wait();
         }
 
@@ -55,6 +44,4 @@ namespace WindowsService1
         {
         }
     }
-
-    
 }
